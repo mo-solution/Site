@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Développement Sur Mesure - TechSolutions Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #0a0a0a, #1a1a2e, #16213e);
+            z-index: -2;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(34, 193, 195, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(253, 187, 45, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 1200px;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background: rgba(34, 193, 195, 0.2);
+            color: #ffffff;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(34, 193, 195, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 50%, #ff6b6b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-stat-label {
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        /* Technologies Section */
+        .technologies {
+            padding: 100px 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .technologies h2 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .tech-category {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .tech-category:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(34, 193, 195, 0.2);
+            border-color: rgba(34, 193, 195, 0.3);
+        }
+
+        .tech-category h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tech-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .tech-item {
+            background: rgba(34, 193, 195, 0.1);
+            border: 1px solid rgba(34, 193, 195, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tech-item:hover {
+            background: rgba(34, 193, 195, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Services Section */
+        .services {
+            padding: 100px 2rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .services-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .services h2 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-detail {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-detail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #22c1c3, #fdbb2d);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .service-detail:hover::before {
+            transform: translateX(0);
+        }
+
+        .service-detail:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(34, 193, 195, 0.2);
+        }
+
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .service-detail h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .service-detail p {
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .service-features {
+            list-style: none;
+        }
+
+        .service-features li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 2rem;
+            opacity: 0.8;
+        }
+
+        .service-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #22c1c3;
+            font-weight: bold;
+        }
+
+        /* Process Section */
+        .process {
+            padding: 100px 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .process h2 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .process-timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .process-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #22c1c3, #fdbb2d);
+            border-radius: 2px;
+        }
+
+        .process-step {
+            position: relative;
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .process-step:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .process-content {
+            width: 45%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .process-number {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            z-index: 2;
+        }
+
+        .process-step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 2rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(34, 193, 195, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(34, 193, 195, 0.4);
+        }
+
+        .cta-button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(10, 10, 10, 0.9);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                width: calc(100% - 20px);
+                padding: 0.75rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-timeline::before {
+                left: 30px;
+            }
+
+            .process-step {
+                flex-direction: row !important;
+                padding-left: 60px;
+            }
+
+            .process-content {
+                width: 100%;
+            }
+
+            .process-number {
+                left: 30px;
+                transform: translateX(-50%);
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">TechSolutions Pro</div>
+            <ul class="nav-links">
+                <li><a href="#technologies">Technologies</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#process">Processus</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="#" class="back-btn" onclick="history.back()">← Retour</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Développement Sur Mesure</h1>
+            <p>Créez des solutions digitales uniques et performantes avec nos équipes d'experts développeurs. De l'application web à l'écosystème complet, nous donnons vie à vos idées les plus ambitieuses.</p>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-number">200+</div>
+                    <div class="hero-stat-label">Projets livrés</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">15+</div>
+                    <div class="hero-stat-label">Technologies maîtrisées</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">99%</div>
+                    <div class="hero-stat-label">Taux de satisfaction</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">24/7</div>
+                    <div class="hero-stat-label">Support continu</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="technologies" class="technologies">
+        <h2>Technologies Maîtrisées</h2>
+        <div class="tech-grid">
+            <div class="tech-category">
+                <h3>Frontend</h3>
+                <div class="tech-items">
+                    <span class="tech-item">React</span>
+                    <span class="tech-item">Vue.js</span>
+                    <span class="tech-item">Angular</span>
+                    <span class="tech-item">Next.js</span>
+                    <span class="tech-item">TypeScript</span>
+                    <span class="tech-item">Tailwind CSS</span>
+                    <span class="tech-item">SASS</span>
+                    <span class="tech-item">Three.js</span>
+                </div>
+            </div>
+            <div class="tech-category">
+                <h3>Backend</h3>
+                <div class="tech-items">
+                    <span class="tech-item">Node.js</span>
+                    <span class="tech-item">Python</span>
+                    <span class="tech-item">PHP</span>
+                    <span class="tech-item">Java</span>
+                    <span class="tech-item">C#</span>
+                    <span class="tech-item">Go</span>
+                    <span class="tech-item">Express.js</span>
+                    <span class="tech-item">Django</span>
+                </div>
+            </div>
+            <div class="tech-category">
+                <h3>Mobile</h3>
+                <div class="tech-items">
+                    <span class="tech-item">React Native</span>
+                    <span class="tech-item">Flutter</span>
+                    <span class="tech-item">Swift</span>
+                    <span class="tech-item">Kotlin</span>
+                    <span class="tech-item">Ionic</span>
+                    <span class="tech-item">Xamarin</span>
+                    <span class="tech-item">PWA</span>
+                </div>
+            </div>
+            <div class="tech-category">
+                <h3>Base de Données</h3>
+                <div class="tech-items">
+                    <span class="tech-item">MySQL</span>
+                    <span class="tech-item">PostgreSQL</span>
+                    <span class="tech-item">MongoDB</span>
+                    <span class="tech-item">Redis</span>
+                    <span class="tech-item">Firebase</span>
+                    <span class="tech-item">Elasticsearch</span>
+                    <span class="tech-item">GraphQL</span>
+                </div>
+            </div>
+            <div class="tech-category">
+                <h3>Cloud & DevOps</h3>
+                <div class="tech-items">
+                    <span class="tech-item">AWS</span>
+                    <span class="tech-item">Azure</span>
+                    <span class="tech-item">Google Cloud</span>
+                    <span class="tech-item">Docker</span>
+                    <span class="tech-item">Kubernetes</span>
+                    <span class="tech-item">CI/CD</span>
+                    <span class="tech-item">Terraform</span>
+                </div>
+            </div>
+            <div class="tech-category">
+                <h3>Emerging Tech</h3>
+                <div class="tech-items">
+                    <span class="tech-item">Blockchain</span>
+                    <span class="tech-item">Web3</span>
+                    <span class="tech-item">AR/VR</span>
+                    <span class="tech-item">IoT</span>
+                    <span class="tech-item">Microservices</span>
+                    <span class="tech-item">Serverless</span>
+                    <span class="tech-item">Edge Computing</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <div class="services-container">
+            <h2>Nos Services de Développement</h2>
+            <div class="services-grid">
+                <div class="service-detail">
+                    <div class="service-icon">🌐</div>
+                    <h3>Applications Web</h3>
+                    <p>Développement d'applications web performantes et évolutives avec les dernières technologies frontend et backend.</p>
+                    <ul class="service-features">
+                        <li>Applications React/Vue.js haute performance</li>
+                        <li>APIs RESTful et GraphQL</li>
+                        <li>Optimisation SEO et performances</li>
+                        <li>Intégration de paiements en ligne</li>
+                        <li>Tableaux de bord administratifs</li>
+                    </ul>
+                </div>
+                <div class="service-detail">
+                    <div class="service-icon">📱</div>
+                    <h3>Applications Mobile</h3>
+                    <p>Création d'applications mobiles natives et cross-platform pour iOS et Android avec une expérience utilisateur exceptionnelle.</p>
+                    <ul class="service-features">
+                        <li>Applications React Native/Flutter</li>
+                        <li>Développement natif iOS/Android</li>
+                        <li>Applications offline-first</li>
+                        <li>Notifications push intelligentes</li>
+                        <li>Intégration de capteurs et GPS</li>
+                    </ul>
+                </div>
+                <div class="service-detail">
+                    <div class="service-icon">⚙️</div>
+                    <h3>Systèmes Complexes</h3>
+                    <p>Architecture et développement de systèmes complexes, microservices et solutions d'entreprise scalables.</p>
+                    <ul class="service-features">
+                        <li>Architecture microservices</li>
+                        <li>Systèmes distribués</li>
+                        <li>Intégrations ERP/CRM</li>
+                        <li>Solutions de haute disponibilité</li>
+                        <li>Monitoring et alertes avancées</li>
+                    </ul>
+                </div>
+                <div class="service-detail">
+                    <div class="service-icon">🔒</div>
+                    <h3>Sécurité & Performance</h3>
+                    <p>Audit de sécurité, optimisation des performances et mise en place de bonnes pratiques de développement.</p>
+                    <ul class="service-features">
+                        <li>Audit de sécurité complet</li>
+                        <li>Optimisation des performances</li>
+                        <li>Tests automatisés</li>
+                        <li>Mise en place CI/CD</li>
+                        <li>Documentation technique</li>
+                    </ul>
+                </div>
+                <div class="service-detail">
+                    <div class="service-icon">☁️</div>
+                    <h3>Cloud & DevOps</h3>
+                    <p>Migration vers le cloud, containerisation et automatisation des déploiements pour une infrastructure moderne.</p>
+                    <ul class="service-features">
+                        <li>Migration cloud (AWS, Azure, GCP)</li>
+                        <li>Containerisation Docker/Kubernetes</li>
+                        <li>Infrastructure as Code</li>
+                        <li>Auto-scaling et load balancing</li>
+                        <li>Monitoring et observabilité</li>
+                    </ul>
+                </div>
+                <div class="service-detail">
+                    <div class="service-icon">🚀</div>
+                    <h3>Innovation & R&D</h3>
+                    <p>Exploration de nouvelles technologies émergentes et développement de solutions innovantes pour votre secteur.</p>
+                    <ul class="service-features">
+                        <li>Prototypage rapide</li>
+                        <li>Blockchain et Web3</li>
+                        <li>Réalité augmentée/virtuelle</li>
+                        <li>Internet des objets (IoT)</li>
+                        <li>Solutions edge computing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="process" class="process">
+        <h2>Notre Processus de Développement</h2>
+        <div class="process-timeline">
+            <div class="process-step">
+                <div class="process-content">
+                    <h3>Analyse & Conception</h3>
+                    <p>Nous analysons vos besoins, définissons l'architecture technique et créons les maquettes de votre solution.</p>
+                </div>
+                <div class="process-number">1</div>
+            </div>
+            <div class="process-step">
+                <div class="process-content">
+                    <h3>Développement Agile</h3>
+                    <p>Développement itératif avec des sprints courts, des points réguliers et une livraison continue de fonctionnalités.</p>
+                </div>
+                <div class="process-number">2</div>
+            </div>
+            <div class="process-step">
+                <div class="process-content">
+                    <h3>Tests & Qualité</h3>
+                    <p>Tests unitaires, d'intégration et fonctionnels pour garantir la qualité et la fiabilité de votre application.</p>
+                </div>
+                <div class="process-number">3</div>
+            </div>
+            <div class="process-step">
+                <div class="process-content">
+                    <h3>Déploiement & Monitoring</h3>
+                    <p>Mise en production sécurisée avec monitoring en temps réel et optimisation continue des performances.</p>
+                </div>
+                <div class="process-number">4</div>
+            </div>
+            <div class="process-step">
+                <div class="process-content">
+                    <h3>Support & Évolution</h3>
+                    <p>Maintenance continue, support technique 24/7 et évolution de votre solution selon vos nouveaux besoins.</p>
+                </div>
+                <div class="process-number">5</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Prêt à Développer Votre Projet ?</h2>
+            <p>Transformez vos idées en solutions digitales exceptionnelles avec notre expertise technique de pointe.</p>
+            <div class="cta-buttons">
+                <a href="#" class="cta-button">
+                    Demander un devis
+                    <span>→</span>
+                </a>
+                <a href="#" class="cta-button secondary">
+                    Voir nos réalisations
+                    <span>👁️</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 TechSolutions Pro. Tous droits réservés. | Développement Sur Mesure</p>
+    </footer>
